@@ -74,7 +74,7 @@ function mandelbrot_escapes(cx, cy, n) {
   let i = 0;
 
   while (n > 0) {
-    if (zx * zx + zy * zy > 2.0) return i;
+    if (zx * zx + zy * zy > 4.0) return i;
     let newzx = zx * zx - zy * zy + cx;
     let newzy = 2 * zx * zy + cy;
     zx = newzx;
