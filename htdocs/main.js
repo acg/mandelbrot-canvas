@@ -70,15 +70,16 @@ function render() {
 }
 
 function mandelbrot_escapes(cx, cy, n) {
-  let zx = 0, zy = 0;
+  let zx = 0, zy = 0, zxsq = 0, zysq = 0;
   let i = 0;
 
-  while (n > 0) {
-    if (zx * zx + zy * zy > 4.0) return i;
-    let newzx = zx * zx - zy * zy + cx;
-    let newzy = 2 * zx * zy + cy;
-    zx = newzx;
-    zy = newzy;
+  while (n > 0 && zxsq + zysq <= 4.0) {
+    zy = zx * zy;
+    zy += zy;
+    zy += cy;
+    zx = zxsq - zysq + cx;
+    zxsq = zx * zx;
+    zysq = zy * zy;
     n--; i++;
   }
 
