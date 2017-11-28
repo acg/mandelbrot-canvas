@@ -7,13 +7,14 @@ let canvas,
 
 let drawing = false;
 
-const iterations = 100;
+const max_iterations = 100;
 
 let cx, cy,
     rx = 2.0,
     ox = 0.0, oy = 0.0,
     dx = 0.0, dy = 0.0,
-    zoom = 1.0;
+    zoom = 1.0,
+    iterations = max_iterations / 2;
 
 let mousedown = false,
     mousezoom = false,
@@ -41,8 +42,13 @@ function draw() {
     zoom = 0.975;
     dx = (1 - zoom) * px;
     dy = (1 - zoom) * py;
+    iterations = max_iterations / 2;
   }
   drawing = dx || dy || zoom !== 1.0;
+  if (!drawing && iterations < max_iterations) {
+    iterations = max_iterations;
+    drawing = true;
+  }
   if (!drawing) return;
   ox += dx;
   oy += dy;
@@ -137,6 +143,8 @@ function onkey(ev) {
     default:
       return;
   }
+
+  iterations = max_iterations / 2;
 
   if (!drawing) draw();
 }
