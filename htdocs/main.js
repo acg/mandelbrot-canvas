@@ -15,10 +15,18 @@ let cx, cy,
     dx = 0.0, dy = 0.0,
     zoom = 1.0;
 
+let mousedown = false,
+    mousezoom = false,
+    mousex,
+    mousey;
+
 window.addEventListener("load", () => {
   resize();
   document.onkeyup = onkey;
   document.onkeydown = onkey;
+  document.onmousedown = onmouse;
+  document.onmousemove = onmouse;
+  document.onmouseup = onmouse;
   window.onresize = resize;
 });
 
@@ -26,6 +34,14 @@ function draw() {
   drawing = true;
   render();
   flip();
+  if (mousezoom) {
+    const ry = rx * cy / cx,
+          px = -rx + 2 * rx * mousex,
+          py = -ry + 2 * ry * mousey;
+    zoom = 0.975;
+    dx = (1 - zoom) * px;
+    dy = (1 - zoom) * py;
+  }
   drawing = dx || dy || zoom !== 1.0;
   if (!drawing) return;
   ox += dx;
@@ -78,7 +94,7 @@ function resize() {
   let aspect = window.innerWidth / window.innerHeight;
 
   canvas = document.getElementById('screen');
-  canvas.width = cx = window.innerWidth < 800 ? window.innerWidth : 800;
+  canvas.width = cx = Math.min(window.innerWidth, 800);
   canvas.height = cy = canvas.width / aspect;
 
   if (canvas.getContext) {
@@ -112,9 +128,34 @@ function onkey(ev) {
     case 40:    // down
       dy = iskeyup ? 0 : (5 * ry / cy); break;
     case 187:   // =
-      zoom = iskeyup ? 1.0 : 0.95; break;
+      zoom = iskeyup ? 1.0 : 0.95;
+      break;
     case 189:   // -
-      zoom = iskeyup ? 1.0 : 1.05; break;
+      zoom = iskeyup ? 1.0 : 1.05;
+      break;
+    default:
+      return;
+  }
+
+  if (!drawing) draw();
+}
+
+function onmouse(ev) {
+  switch (ev.type) {
+    case 'mousedown':
+      mousedown = true;
+    case 'mousemove':
+      if (!mousedown) return;
+      mousezoom = true;
+      mousex = ev.pageX / window.innerWidth;
+      mousey = ev.pageY / window.innerHeight;
+      break;
+    case 'mouseup':
+      mousedown = false;
+      mousezoom = false;
+      dx = dy = 0.0;
+      zoom = 1.0;
+      break;
     default:
       return;
   }
