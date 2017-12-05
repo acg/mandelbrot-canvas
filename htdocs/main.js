@@ -20,7 +20,7 @@ let cx, cy,
 
 const max_pixel_size = 8;
 
-const total_colors = 1 << 24;
+const total_colors = 1 << 16;
 const palette = new Uint32Array(total_colors * 4);
 
 let mousedown = false,
