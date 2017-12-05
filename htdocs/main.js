@@ -42,7 +42,7 @@ function draw() {
     zoom = 0.975;
     dx = (1 - zoom) * px;
     dy = (1 - zoom) * py;
-    pixel_size = max_pixel_size;
+    if (pixel_size < max_pixel_size) pixel_size *= 2;
   }
   drawing = dx || dy || zoom !== 1.0;
   if (!drawing && pixel_size > 1) {
@@ -151,7 +151,7 @@ function onkey(ev) {
       return;
   }
 
-  pixel_size = max_pixel_size;
+  if (pixel_size < max_pixel_size) pixel_size *= 2;
 
   if (!drawing) draw();
 }
