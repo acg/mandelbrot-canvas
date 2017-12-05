@@ -16,12 +16,16 @@ let cx, cy,
 
 const max_pixel_size = 8;
 
+const total_colors = 1 << 24;
+const palette = new Uint32Array(total_colors * 4);
+
 let mousedown = false,
     mousezoom = false,
     mousex,
     mousey;
 
 window.addEventListener("load", () => {
+  palettize();
   resize();
   document.onkeyup = onkey;
   document.onkeydown = onkey;
@@ -70,10 +74,10 @@ function render() {
     for (ypix=0; ypix<pixel_size; ypix++) {
       for (x=ax, nx=0; nx<cx; x+=dx, nx+=pixel_size) {
         let q = mandelbrot_escapes(x,y,max_iterations);
-        let color = Math.round(q * 0xff / max_iterations);
-        let alpha = 0xff, r = color, b = color, g = color;
+        let color = Math.floor(total_colors * (q-1) / max_iterations);
+        let rgba = palette[color];
         for (xpix=0; xpix<pixel_size; xpix++) {
-          buf32[offset++] = (alpha << 24) | (r << 16) | (g << 8) | b;
+          buf32[offset++] = rgba;
         }
       }
     }
@@ -97,6 +101,26 @@ function mandelbrot_escapes(cx, cy, n) {
   if (n > 0) i += 4.0 / (zxsq + zysq);
 
   return i;
+}
+
+function palettize() {
+  let i, hue, offset;
+  let dhue = 6 / total_colors;
+  for (i=0, hue=0, offset=0; i<total_colors; i++, hue+=dhue) {
+    let c = Math.floor(0xff * 0.5 * (1 + Math.sin(hue)));
+    let x = Math.floor(0xff * (1 - Math.abs(hue % 2 - 1)));
+    let r, g, b;
+    switch (Math.floor(hue + 0.1)) {
+      case 0  : r = c; g = x; b = 0; break;
+      case 1  : r = x; g = c; b = 0; break;
+      case 2  : r = 0; g = c; b = x; break;
+      case 3  : r = 0; g = x; b = c; break;
+      case 4  : r = x; g = 0; b = c; break;
+      case 5  : r = c; g = 0; b = x; break;
+      default : r = 0; g = 0; b = 0; break;
+    }
+    palette[offset++] = 0xff000000 | (r << 16) | (g << 8) | b;
+  }
 }
 
 function flip() {
