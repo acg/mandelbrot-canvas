@@ -25,6 +25,7 @@ let mousedown = false,
     mousey;
 
 window.addEventListener("load", () => {
+  canvas = document.getElementById('screen');
   palettize();
   resize();
   document.onkeyup = onkey;
@@ -32,6 +33,9 @@ window.addEventListener("load", () => {
   document.onmousedown = onmouse;
   document.onmousemove = onmouse;
   document.onmouseup = onmouse;
+  canvas.ontouchstart = onmouse;
+  canvas.ontouchmove = onmouse;
+  canvas.ontouchend = onmouse;
   window.onresize = resize;
 });
 
@@ -131,7 +135,6 @@ function flip() {
 function resize() {
   let aspect = window.innerWidth / window.innerHeight;
 
-  canvas = document.getElementById('screen');
   canvas.width = cx = window.innerWidth & ~0xf;
   canvas.height = cy = Math.floor(canvas.width / aspect) & ~0xf;
 
@@ -187,14 +190,17 @@ function onkey(ev) {
 function onmouse(ev) {
   switch (ev.type) {
     case 'mousedown':
+    case 'touchstart':
       mousedown = true;
     case 'mousemove':
+    case 'touchmove':
       if (!mousedown) return;
       mousezoom = true;
       mousex = ev.pageX / window.innerWidth;
       mousey = ev.pageY / window.innerHeight;
       break;
     case 'mouseup':
+    case 'touchend':
       mousedown = false;
       mousezoom = false;
       dx = dy = 0.0;
