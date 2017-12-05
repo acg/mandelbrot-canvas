@@ -89,6 +89,8 @@ function mandelbrot_escapes(cx, cy, n) {
     n--; i++;
   }
 
+  if (n > 0) i += 4.0 / (zxsq + zysq);
+
   return i;
 }
 
