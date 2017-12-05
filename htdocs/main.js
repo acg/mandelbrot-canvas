@@ -8,8 +8,8 @@ let canvas,
 let drawing = false;
 
 let cx, cy,
-    rx = 2.0,
-    ox = 0.0, oy = 0.0,
+    rx = 3.0,
+    ox = -0.5, oy = 0.0,
     dx = 0.0, dy = 0.0,
     zoom = 1.0,
     pixel_size = 1;
