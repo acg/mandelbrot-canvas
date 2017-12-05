@@ -7,14 +7,14 @@ let canvas,
 
 let drawing = false;
 
-const max_iterations = 100;
-
 let cx, cy,
     rx = 2.0,
     ox = 0.0, oy = 0.0,
     dx = 0.0, dy = 0.0,
     zoom = 1.0,
-    iterations = max_iterations / 2;
+    pixel_size = 1;
+
+const max_pixel_size = 8;
 
 let mousedown = false,
     mousezoom = false,
@@ -42,11 +42,11 @@ function draw() {
     zoom = 0.975;
     dx = (1 - zoom) * px;
     dy = (1 - zoom) * py;
-    iterations = max_iterations / 2;
+    pixel_size = max_pixel_size;
   }
   drawing = dx || dy || zoom !== 1.0;
-  if (!drawing && iterations < max_iterations) {
-    iterations = max_iterations;
+  if (!drawing && pixel_size > 1) {
+    pixel_size = pixel_size >> 1;
     drawing = true;
   }
   if (!drawing) return;
@@ -60,17 +60,22 @@ function render() {
   const ry = rx * cy / cx;
   const ax = ox-rx, ay = oy-ry;
   const bx = ox+rx, by = oy+ry;
-  const dx = (bx-ax)/cx, dy = (by-ay)/cy;
+  const dx = pixel_size*(bx-ax)/cx, dy = pixel_size*(by-ay)/cy;
 
-  let x, y;
+  let x, y, xpix, ypix;
   let offset = 0;
+  let max_iterations = Math.floor(Math.max(100, -100 * Math.log(rx)));
 
-  for (y=ay, ny=0; ny<cy; y+=dy, ny++) {
-    for (x=ax, nx=0; nx<cx; x+=dx, nx++) {
-      let q = mandelbrot_escapes(x,y,iterations);
-      let color = Math.round(q * 0xff / iterations);
-      let alpha = 0xff, r = color, b = color, g = color;
-      buf32[offset++] = (alpha << 24) | (r << 16) | (g << 8) | b;
+  for (y=ay, ny=0; ny<cy; y+=dy, ny+=pixel_size) {
+    for (ypix=0; ypix<pixel_size; ypix++) {
+      for (x=ax, nx=0; nx<cx; x+=dx, nx+=pixel_size) {
+        let q = mandelbrot_escapes(x,y,max_iterations);
+        let color = Math.round(q * 0xff / max_iterations);
+        let alpha = 0xff, r = color, b = color, g = color;
+        for (xpix=0; xpix<pixel_size; xpix++) {
+          buf32[offset++] = (alpha << 24) | (r << 16) | (g << 8) | b;
+        }
+      }
     }
   }
 }
@@ -103,8 +108,8 @@ function resize() {
   let aspect = window.innerWidth / window.innerHeight;
 
   canvas = document.getElementById('screen');
-  canvas.width = cx = Math.min(window.innerWidth, 800);
-  canvas.height = cy = canvas.width / aspect;
+  canvas.width = cx = window.innerWidth & ~0xf;
+  canvas.height = cy = Math.floor(canvas.width / aspect) & ~0xf;
 
   if (canvas.getContext) {
     context = canvas.getContext('2d');
@@ -146,7 +151,7 @@ function onkey(ev) {
       return;
   }
 
-  iterations = max_iterations / 2;
+  pixel_size = max_pixel_size;
 
   if (!drawing) draw();
 }
