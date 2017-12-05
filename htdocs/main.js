@@ -7,9 +7,13 @@ let canvas,
 
 let drawing = false;
 
+const default_rx = 3.0,
+      default_ox = -0.5,
+      default_oy = 0.0;
+
 let cx, cy,
-    rx = 3.0,
-    ox = -0.5, oy = 0.0,
+    rx = default_rx,
+    ox = default_ox, oy = default_oy,
     dx = 0.0, dy = 0.0,
     zoom = 1.0,
     pixel_size = 1;
@@ -177,6 +181,11 @@ function onkey(ev) {
       break;
     case 189:   // -
       zoom = iskeyup ? 1.0 : 1.05;
+      break;
+    case 48:    // 0
+      rx = default_rx;
+      ox = default_ox;
+      oy = default_oy;
       break;
     default:
       return;
