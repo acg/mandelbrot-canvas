@@ -32,15 +32,17 @@ window.addEventListener("load", () => {
   canvas = document.getElementById('screen');
   palettize();
   resize();
-  document.onkeyup = onkey;
-  document.onkeydown = onkey;
-  document.onmousedown = onmouse;
-  document.onmousemove = onmouse;
-  document.onmouseup = onmouse;
-  canvas.ontouchstart = onmouse;
-  canvas.ontouchmove = onmouse;
-  canvas.ontouchend = onmouse;
   window.onresize = resize;
+
+  document.onkeyup     =
+  document.onkeydown   = onkey;
+
+  document.onmousedown =
+  document.onmousemove =
+  document.onmouseup   =
+  canvas.ontouchstart  =
+  canvas.ontouchmove   =
+  canvas.ontouchend    = onmouse;
 });
 
 function draw() {
