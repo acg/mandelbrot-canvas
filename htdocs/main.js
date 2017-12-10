@@ -182,7 +182,8 @@ function onkey(ev) {
   const iskeyup = (ev.type === "keyup");
 
   if (!iskeydown && !iskeyup) return;
-  if (ev.ctrlKey || ev.shiftKey || ev.altKey || ev.metaKey) return;
+  if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
+  if (ev.keyCode === 16) return; // shift key by itself
 
   show_legend = false;
 
@@ -216,6 +217,9 @@ function onkey(ev) {
       break;
     case 67:    // c
       if (iskeyup) palettize();
+      break;
+    case 191:   // ?
+      if (iskeyup) show_legend = true;
       break;
     default:
       return;
