@@ -161,6 +161,7 @@ function onkey(ev) {
   const iskeyup = (ev.type === "keyup");
 
   if (!iskeydown && !iskeyup) return;
+  if (ev.ctrlKey || ev.shiftKey || ev.altKey || ev.metaKey) return;
 
   const ry = rx * cy / cx;
 
