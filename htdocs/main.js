@@ -188,6 +188,9 @@ function onkey(ev) {
       ox = default_ox;
       oy = default_oy;
       break;
+    case 67:    // c
+      if (iskeyup) palettize();
+      break;
     default:
       return;
   }
