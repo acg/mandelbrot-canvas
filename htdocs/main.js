@@ -20,6 +20,7 @@ let cx, cy,
 
 const max_pixel_size = 8;
 
+let seed_colors;
 const total_colors = 1 << 16;
 const palette = new Uint32Array(total_colors * 4);
 
@@ -114,9 +115,14 @@ function mandelbrot_escapes(cx, cy, n) {
 }
 
 function palettize() {
-  const seed_colors = Array(32).fill(0).map((_x, i) => {
-    return { r: Math.random(), g: Math.random(), b: Math.random() };
-  }).concat({ r: 0, g: 0, b: 0 });
+  if (!seed_colors) {
+    seed_colors = Array(32).fill(0).map((_x, i) => hsl2rgb(i / 32, 1, 0.5));
+  } else {
+    seed_colors = Array(32).fill(0).map((_x, i) => {
+      return { r: Math.random(), g: Math.random(), b: Math.random() };
+    });
+  }
+  seed_colors = seed_colors.concat({ r: 0, g: 0, b: 0 });
 
   let i, offset;
   for (i=0, offset=0; i<total_colors; i++) {
@@ -129,6 +135,23 @@ function palettize() {
         b = Math.floor(0xff * (color_1.b + d * (color_2.b - color_1.b)));
     palette[offset++] = 0xff000000 | (r << 16) | (g << 8) | b;
   }
+}
+
+function hsl2rgb(h, s, l) {
+  let hprime = 6 * h;
+  let c = (1 - Math.abs(2 * l - 1)) * s;
+  let x = c * (1 - Math.abs(hprime % 2 - 1));
+  let r, g, b;
+  switch (Math.floor(hprime)) {
+    case 0  : r = c; g = x; b = 0; break;
+    case 1  : r = x; g = c; b = 0; break;
+    case 2  : r = 0; g = c; b = x; break;
+    case 3  : r = 0; g = x; b = c; break;
+    case 4  : r = x; g = 0; b = c; break;
+    case 5  : r = c; g = 0; b = x; break;
+    default : r = 1; g = 1; b = 1; break;
+  }
+  return { r, g, b };
 }
 
 function flip() {
