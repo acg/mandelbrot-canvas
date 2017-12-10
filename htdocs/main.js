@@ -185,8 +185,7 @@ function onkey(ev) {
   if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
   if (ev.keyCode === 16) return; // shift key by itself
 
-  show_legend = false;
-
+  let new_show_legend;
   const ry = rx * cy / cx;
 
   switch (ev.keyCode)
@@ -213,17 +212,22 @@ function onkey(ev) {
       rx = default_rx;
       ox = default_ox;
       oy = default_oy;
-      show_legend = true;
+      new_show_legend = true;
       break;
     case 67:    // c
-      if (iskeyup) palettize();
+      if (iskeydown) return;
+      palettize();
       break;
     case 191:   // ?
-      if (iskeyup) show_legend = true;
+      if (iskeydown) return;
+      new_show_legend = !show_legend;
       break;
     default:
       return;
   }
+
+  if (new_show_legend === undefined) new_show_legend = false;
+  show_legend = new_show_legend;
 
   if (pixel_size < max_pixel_size) pixel_size *= 2;
 
