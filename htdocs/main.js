@@ -1,4 +1,5 @@
-let canvas,
+let legend,
+    canvas,
     context,
     imagedata,
     bufarray,
@@ -30,6 +31,7 @@ let mousedown = false,
     mousey;
 
 window.addEventListener("load", () => {
+  legend = document.getElementById('legend');
   canvas = document.getElementById('screen');
   palettize();
   resize();
@@ -180,6 +182,7 @@ function onkey(ev) {
   if (!iskeydown && !iskeyup) return;
   if (ev.ctrlKey || ev.shiftKey || ev.altKey || ev.metaKey) return;
 
+  let show_legend = false;
   const ry = rx * cy / cx;
 
   switch (ev.keyCode)
@@ -206,6 +209,7 @@ function onkey(ev) {
       rx = default_rx;
       ox = default_ox;
       oy = default_oy;
+      show_legend = true;
       break;
     case 67:    // c
       if (iskeyup) palettize();
@@ -213,6 +217,8 @@ function onkey(ev) {
     default:
       return;
   }
+
+  legend.style.display = show_legend ? "inherit" : "none";
 
   if (pixel_size < max_pixel_size) pixel_size *= 2;
 
