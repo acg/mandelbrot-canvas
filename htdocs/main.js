@@ -114,21 +114,19 @@ function mandelbrot_escapes(cx, cy, n) {
 }
 
 function palettize() {
-  let i, hue, offset;
-  let dhue = 6 / total_colors;
-  for (i=0, hue=0, offset=0; i<total_colors; i++, hue+=dhue) {
-    let c = Math.floor(0xff * 0.5 * (1 + Math.sin(hue)));
-    let x = Math.floor(0xff * (1 - Math.abs(hue % 2 - 1)));
-    let r, g, b;
-    switch (Math.floor(hue + 0.1)) {
-      case 0  : r = c; g = x; b = 0; break;
-      case 1  : r = x; g = c; b = 0; break;
-      case 2  : r = 0; g = c; b = x; break;
-      case 3  : r = 0; g = x; b = c; break;
-      case 4  : r = x; g = 0; b = c; break;
-      case 5  : r = c; g = 0; b = x; break;
-      default : r = 0; g = 0; b = 0; break;
-    }
+  const seed_colors = Array(32).fill(0).map((_x, i) => {
+    return { r: Math.random(), g: Math.random(), b: Math.random() };
+  }).concat({ r: 0, g: 0, b: 0 });
+
+  let i, offset;
+  for (i=0, offset=0; i<total_colors; i++) {
+    let t = i * (seed_colors.length-1) / total_colors;
+    let color_1 = seed_colors[Math.floor(t)];
+    let color_2 = seed_colors[Math.floor(t)+1];
+    let d = t - Math.floor(t);
+    let r = Math.floor(0xff * (color_1.r + d * (color_2.r - color_1.r))),
+        g = Math.floor(0xff * (color_1.g + d * (color_2.g - color_1.g))),
+        b = Math.floor(0xff * (color_1.b + d * (color_2.b - color_1.b)));
     palette[offset++] = 0xff000000 | (r << 16) | (g << 8) | b;
   }
 }
