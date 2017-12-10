@@ -1,4 +1,5 @@
 let legend,
+    show_legend = true,
     canvas,
     context,
     imagedata,
@@ -49,6 +50,7 @@ window.addEventListener("load", () => {
 });
 
 function draw() {
+  legend.style.display = show_legend ? "inherit" : "none";
   drawing = true;
   render();
   flip();
@@ -182,7 +184,8 @@ function onkey(ev) {
   if (!iskeydown && !iskeyup) return;
   if (ev.ctrlKey || ev.shiftKey || ev.altKey || ev.metaKey) return;
 
-  let show_legend = false;
+  show_legend = false;
+
   const ry = rx * cy / cx;
 
   switch (ev.keyCode)
@@ -218,8 +221,6 @@ function onkey(ev) {
       return;
   }
 
-  legend.style.display = show_legend ? "inherit" : "none";
-
   if (pixel_size < max_pixel_size) pixel_size *= 2;
 
   if (!drawing) draw();
@@ -247,6 +248,8 @@ function onmouse(ev) {
     default:
       return;
   }
+
+  show_legend = false;
 
   if (!drawing) draw();
 }
