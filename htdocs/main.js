@@ -115,14 +115,10 @@ function mandelbrot_escapes(cx, cy, n) {
 }
 
 function palettize() {
-  if (!seed_colors) {
-    seed_colors = Array(32).fill(0).map((_x, i) => hsl2rgb(i / 32, 1, 0.5));
-  } else {
-    seed_colors = Array(32).fill(0).map((_x, i) => {
-      return { r: Math.random(), g: Math.random(), b: Math.random() };
-    });
-  }
-  seed_colors = seed_colors.concat({ r: 0, g: 0, b: 0 });
+  const randomize = !!seed_colors;
+  seed_colors = Array(32).fill(0)
+    .map((_x, i) => hsl2rgb(randomize ? Math.random() : (i / 32), 1, 0.5))
+    .concat({ r: 0, g: 0, b: 0 });
 
   let i, offset;
   for (i=0, offset=0; i<total_colors; i++) {
