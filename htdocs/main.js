@@ -235,6 +235,8 @@ function onkey(ev) {
 }
 
 function onmouse(ev) {
+  if (ev.button !== 0) return;
+
   switch (ev.type) {
     case 'mousedown':
     case 'touchstart':
