@@ -37,8 +37,14 @@ let mousedown = false,
     mousey;
 
 window.addEventListener("load", () => {
-  legend = document.getElementById('legend');
-  canvas = document.getElementById('screen');
+  legend = document.getElementById("legend");
+  canvas = document.getElementById("screen");
+
+  const hashparts = document.location.hash.replace(/^#/,"").split(",");
+  if (hashparts.length === 3) {
+    [ox, oy, rx] = hashparts.map((x) => parseFloat(x));
+  }
+
   palettize();
   resize();
   window.onresize = resize;
@@ -55,6 +61,8 @@ window.addEventListener("load", () => {
 });
 
 function draw() {
+  const is_default_viewport = (rx === default_rx && ox === default_ox && oy === default_oy);
+  document.location.hash = is_default_viewport ? "" : `#${ox},${oy},${rx}`;
   legend.style.display = show_legend ? "inherit" : "none";
   drawing = true;
   render();
