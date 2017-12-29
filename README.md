@@ -1,7 +1,12 @@
 ## Mandelbrot Canvas
 
-A 1 hour hack inspired by [this canvas terrain renderer](https://github.com/s-macke/VoxelSpace).
+A zoomable fractal explorer using the HTML Canvas API.
 
-- Arrow keys to pan
-- `=` to zoom in
-- `-` to zoom out
+[Live Demo](http://alangrow.com/projects/mandelbrot-canvas/)
+
+![screenshot](./htdocs/img/mandelbrot-canvas-screenshot.jpg)
+
+### Inspiration
+
+[This cool terrain renderer](https://github.com/s-macke/VoxelSpace).
+
