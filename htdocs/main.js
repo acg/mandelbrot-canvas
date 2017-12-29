@@ -102,7 +102,7 @@ function render() {
     for (ypix=0; ypix<pixel_size; ypix++) {
       for (x=ax, nx=0; nx<cx; x+=dx, nx+=pixel_size) {
         let q = mandelbrot_escapes(x,y,max_iterations);
-        let color = Math.floor(total_colors * (q-1) / max_iterations);
+        let color = Math.floor(total_colors * q / max_iterations) - 1;
         let rgba = palette[color];
         for (xpix=0; xpix<pixel_size; xpix++) {
           buf32[offset++] = rgba;
