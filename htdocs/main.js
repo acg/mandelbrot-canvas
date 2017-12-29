@@ -1,3 +1,8 @@
+/* A zoomable fractal explorer using the HTML Canvas API.
+ * https://github.com/acg/mandelbrot-canvas
+ * (c) Alan Grow 2017
+ */
+
 let legend,
     show_legend = true,
     canvas,
