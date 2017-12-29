@@ -205,16 +205,16 @@ function onkey(ev) {
   {
     case 37:    // left
     case 72:    // j
-      dx = iskeyup ? 0 : (-5 * rx / cx); break;
+      dx = iskeyup ? 0 : (-10 * rx / cx); break;
     case 39:    // right
     case 76:    // l
-      dx = iskeyup ? 0 : (5 * rx / cx); break;
+      dx = iskeyup ? 0 : (10 * rx / cx); break;
     case 38:    // up
     case 75:    // k
-      dy = iskeyup ? 0 : (-5 * ry / cy); break;
+      dy = iskeyup ? 0 : (-10 * ry / cy); break;
     case 40:    // down
     case 74:    // j
-      dy = iskeyup ? 0 : (5 * ry / cy); break;
+      dy = iskeyup ? 0 : (10 * ry / cy); break;
     case 187:   // =
       zoom = iskeyup ? 1.0 : 0.95;
       break;
